@@ -33,7 +33,6 @@ public class AudioRecorder {
     }
 
     public void createAudioDataFolder() {
-
         try {
             File audioFolderDir = new File(audioDirPath);
 

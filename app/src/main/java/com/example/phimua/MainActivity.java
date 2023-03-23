@@ -25,7 +25,6 @@ import android.content.Intent;
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "Main Activity";
 
-    //static TextView outp;
     Button start_recording;
     Button close_app;
     Button stop_recording;
@@ -33,6 +32,7 @@ public class MainActivity extends AppCompatActivity {
     boolean bound;
     static boolean stopThread = false;
     Intent audioRecordServiceIntent;
+    Intent sensorRecordServiceIntent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,32 +41,36 @@ public class MainActivity extends AppCompatActivity {
         start_recording = findViewById(R.id.start_recording);
         close_app = findViewById(R.id.close_app);
         stop_recording = findViewById(R.id.stop_recording);
-        //outp = findViewById(R.id.hw);
-        //outp.setTextColor(Color.WHITE);
+
     }
 
     public void OnStartButtonClicked(View v){
         if (!checkPermissonfromDevice())
             requestPermission();
 
-//        Intent startServiceIntent = new Intent(this, ForegroundService.class); // activity context
-//        startService(startServiceIntent);
+        // TODO: integrate audio and IMU recording
+        // TODO: determine how potentially large amounts of data will be saved
 
-        audioRecordServiceIntent = new Intent(this, AudioRecordService.class);
         // start audio recording
-        startService(audioRecordServiceIntent);
+        //audioRecordServiceIntent = new Intent(this, AudioRecordService.class);
+        //startService(audioRecordServiceIntent);
+
+        // start sensor recording
+        sensorRecordServiceIntent = new Intent(this, SensorRecordService.class);
+        startService(sensorRecordServiceIntent);
+
         start_recording.setEnabled(false);
 
     }
 
     public void OnStopButtonClicked(View v){
-        //Intent stopServiceIntent = new Intent(this, ForegroundService.class);
-        //stopService(stopServiceIntent);
-        stopService(audioRecordServiceIntent);
 
-        stopThread = true;
-        // TODO: if reset is pressed twice in a row, it displays "resetting..." forever
-        //outp.setText("Resetting...");
+        // stop audio recording
+        //stopService(audioRecordServiceIntent);
+
+        // stop sensor recording
+        stopService(sensorRecordServiceIntent);
+
         start_recording.setEnabled(true);
     }
 

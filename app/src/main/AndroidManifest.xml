@@ -26,6 +26,8 @@
             </intent-filter>
         </activity>
         <service android:name=".AudioRecordService" />
+        <service android:name=".SensorRecordService" />
+
     </application>
     <uses-feature android:name="android.hardware.type.watch" />
 
