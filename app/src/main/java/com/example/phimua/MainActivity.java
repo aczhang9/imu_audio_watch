@@ -48,25 +48,23 @@ public class MainActivity extends AppCompatActivity {
         if (!checkPermissonfromDevice())
             requestPermission();
 
-        // TODO: integrate audio and IMU recording
-        // TODO: determine how potentially large amounts of data will be saved
-
         // start audio recording
-        //audioRecordServiceIntent = new Intent(this, AudioRecordService.class);
-        //startService(audioRecordServiceIntent);
+        audioRecordServiceIntent = new Intent(this, AudioRecordService.class);
+        startService(audioRecordServiceIntent);
 
         // start sensor recording
         sensorRecordServiceIntent = new Intent(this, SensorRecordService.class);
         startService(sensorRecordServiceIntent);
 
         start_recording.setEnabled(false);
-
+        //start button should be disabled when UI returns from service notification
+        // use broadcast receiver https://stackoverflow.com/questions/41827335/on-notification-button-click-intent-starting-new-activity-instead-of-resuming
+        // fixed with android:launchMode="singleTask" in manifest file
     }
 
     public void OnStopButtonClicked(View v){
-
         // stop audio recording
-        //stopService(audioRecordServiceIntent);
+        stopService(audioRecordServiceIntent);
 
         // stop sensor recording
         stopService(sensorRecordServiceIntent);

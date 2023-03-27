@@ -42,7 +42,7 @@ public class SensorRecordService extends Service {
                         .build();
 
         // Notification ID cannot be 0.
-        startForeground(1, notification);
+        startForeground(2, notification);
         sensorRecorder = new SensorRecorder(this);
 
         return START_NOT_STICKY;

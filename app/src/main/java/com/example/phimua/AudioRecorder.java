@@ -6,7 +6,10 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 import android.content.Context;
+import android.media.AudioFormat;
+import android.media.AudioRecord;
 import android.media.MediaRecorder;
+import android.media.MediaRecorder.AudioEncoder;
 import android.os.Environment;
 import android.os.StatFs;
 import android.util.Log;
@@ -26,6 +29,12 @@ public class AudioRecorder {
     public AudioRecorder(Context context){
         this.context = context;
         mediaRecorder = new MediaRecorder();
+        /*
+        AudioRecord audioRecordHigh = new AudioRecord(MediaRecorder.AudioSource.MIC,
+                16000,
+                AudioFormat.CHANNEL_IN_MONO,
+                AudioFormat.ENCODING_PCM_16BIT);
+         */
         activity = "";
         simpleDateFormat = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault());
         audioDirPath = context.getExternalFilesDir(null) + "/audio";
@@ -47,11 +56,11 @@ public class AudioRecorder {
 
     public void startAudioRecordProcess(){
 
-        //activity = activityName;
+        getAvailableDeviceMemory();
         startRecording();
-        // TODO: check memory space available
+        // TODO: do something to UI if not enough memory is available
 /*
-        if(getAvailableDeviceMemory() > 100){
+        if(getAvailableDeviceMemory() > 50){
             configureMediaRecorderSetting();
             startRecording();
             Log.d(TAG, "Recording start");
@@ -70,19 +79,16 @@ public class AudioRecorder {
                 // TODO: tweak these values as needed
                 mediaRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
                 mediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
-                mediaRecorder.setAudioEncoder(MediaRecorder.OutputFormat.AMR_NB);
-                //mediaRecorder.setAudioEncodingBitRate(32000);
-                mediaRecorder.setAudioEncodingBitRate(256000);
-                //mediaRecorder.setAudioSamplingRate(44100);
+                mediaRecorder.setAudioEncodingBitRate(23050);
+                mediaRecorder.setAudioEncoder(AudioEncoder.AMR_WB);
                 mediaRecorder.setAudioSamplingRate(16000);
-
+                mediaRecorder.setAudioChannels(1); // mono recording
             }
         } catch (Exception e){
             e.printStackTrace();
         }
     }
 
-    // TODO: will this record when app is background??
     public void startRecording(){
         try {
             if(mediaRecorder != null){
@@ -141,7 +147,7 @@ public class AudioRecorder {
             //String path = "/storage/sdcard1/"; // sd card memory
             //String path = Environment.getDataDirectory().getPath(); // /data
             //String path = Environment.getExternalStorageDirectory().getPath(); // /storage/emulated/0
-            StatFs statFs = new StatFs(path);
+            StatFs statFs = new StatFs(audioDirPath);
             //Log.d(TAG, "Storage Path : " + path);
 
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.JELLY_BEAN_MR2) {

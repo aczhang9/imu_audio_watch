@@ -40,8 +40,8 @@ public class SensorRecorder implements SensorEventListener {
         accelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
         gyroscope = sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE);
 
-        sensorManager.registerListener(this, accelerometer , SensorManager.SENSOR_DELAY_NORMAL); // TODO: is delay normal the right delay??
-        sensorManager.registerListener(this, gyroscope , SensorManager.SENSOR_DELAY_NORMAL); // TODO: is delay normal the right delay?? probably not for gyroscope
+        sensorManager.registerListener(this, accelerometer , SensorManager.SENSOR_DELAY_NORMAL); // 60Hz accelerometer sampling
+        sensorManager.registerListener(this, gyroscope , SensorManager.SENSOR_DELAY_NORMAL); // I think there is tradeoff between accelerometer and gyroscope sampling rates
         Log.d(TAG, "Sensors created");
     }
 
@@ -75,7 +75,6 @@ public class SensorRecorder implements SensorEventListener {
     @Override
     public void onSensorChanged(SensorEvent sensorEvent) {
         Sensor sensor = sensorEvent.sensor;
-        // TODO: is it expected for gyroscope values to not change as much compared to accelerometer values?
         switch (sensor.getType()) {
             case (Sensor.TYPE_ACCELEROMETER):
                 acc = sensorEvent.values;
