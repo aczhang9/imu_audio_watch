@@ -56,11 +56,11 @@ public class AudioRecorder {
 
     public void startAudioRecordProcess(){
 
-        getAvailableDeviceMemory();
+        //getAvailableDeviceMemory();
         startRecording();
         // TODO: do something to UI if not enough memory is available
 /*
-        if(getAvailableDeviceMemory() > 50){
+        if(getAvailableDeviceMemory() > 52){ // ~50MB is required for recording on one full battery charge
             configureMediaRecorderSetting();
             startRecording();
             Log.d(TAG, "Recording start");
@@ -136,7 +136,7 @@ public class AudioRecorder {
             // no valid audio/video data has been received
         }
     }
-
+/*
     public long getAvailableDeviceMemory() {
 
         long availableMegaBytes = 0;
@@ -161,8 +161,8 @@ public class AudioRecorder {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
         return availableMegaBytes;
     }
+    */
 
 }

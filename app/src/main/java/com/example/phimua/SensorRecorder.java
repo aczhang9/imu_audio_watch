@@ -33,15 +33,21 @@ public class SensorRecorder implements SensorEventListener {
 
     public SensorRecorder(Context context) {
         this.context = context;
-        simpleDateFormat = new SimpleDateFormat("yyyyMMdd_HHmmss:SSS", Locale.getDefault());
+        simpleDateFormat = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault());
         imuDirPath = context.getExternalFilesDir(null) + "/IMU";
         createIMUDataFolder();
         sensorManager = (SensorManager) context.getSystemService(Context.SENSOR_SERVICE);
         accelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
         gyroscope = sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE);
 
-        sensorManager.registerListener(this, accelerometer , SensorManager.SENSOR_DELAY_NORMAL); // 60Hz accelerometer sampling
-        sensorManager.registerListener(this, gyroscope , SensorManager.SENSOR_DELAY_NORMAL); // I think there is tradeoff between accelerometer and gyroscope sampling rates
+        // GEN 4 WATCH SETTINGS
+        //sensorManager.registerListener(this, accelerometer, 150000); // 60Hz accelerometer sampling
+        //sensorManager.registerListener(this, gyroscope, 150000); // I think there is tradeoff between accelerometer and gyroscope sampling rates
+
+        // GEN 5 WATCH SETTINGS
+        sensorManager.registerListener(this, accelerometer, 40000); // 60Hz accelerometer sampling
+        sensorManager.registerListener(this, gyroscope, 40000); // I think there is tradeoff between accelerometer and gyroscope sampling rates
+
         Log.d(TAG, "Sensors created");
     }
 
@@ -83,8 +89,9 @@ public class SensorRecorder implements SensorEventListener {
                 gyro = sensorEvent.values;
                 break;
         }
-        String[] data = {simpleDateFormat.format(new Date()), Float.toString(acc[0]), Float.toString(acc[1]), Float.toString(acc[2]),
-                        Float.toString(gyro[0]), Float.toString(gyro[1]), Float.toString(gyro[2])};
+        // simpleDateFormat.format(new Date()),
+        String[] data = {simpleDateFormat.format(new Date()), String.format("%.3f", acc[0]), String.format("%.3f", acc[1]), String.format("%.3f", acc[2]),
+                String.format("%.3f", gyro[0]), String.format("%.3f", gyro[1]), String.format("%.3f", gyro[2])};
         writer.writeNext(data);
     }
 
@@ -98,6 +105,8 @@ public class SensorRecorder implements SensorEventListener {
         sensorManager.unregisterListener(this, accelerometer);
         sensorManager.unregisterListener(this, gyroscope);
         try {
+            //String[] stop_time = {simpleDateFormat.format(new Date())};
+            //writer.writeNext(stop_time);
             writer.close();
         } catch (IOException e) {
             e.printStackTrace();
